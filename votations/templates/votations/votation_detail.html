@@ -1,0 +1,90 @@
+{% extends "votations/base.html" %}
+{% load votation_tags %}
+{% load i18n %}
+
+
+
+{% block content %}
+
+
+<h1>
+	{% if object.active %}
+		{% if object.started %}
+			{% trans "Votations have already started!" %}
+		{% else %}
+			{% trans "Votations for this week haven't started yet. Time left:" %} 
+		{% endif %}
+	{% else %}
+		{% trans "These votations are over!" %}
+	{% endif %}
+</h1>
+
+{% blocktrans with title=object.category.title position=object.get_position_display month=object.get_month_display %}
+	<h2>Votations information: {{title}}. {{position}} votations for: {{month}}</h2>
+{% endblocktrans %}
+
+
+<p><a href=".">How it works</a></p>
+
+<h2>
+	{% if object.active %}
+		{% if object.started %}
+			{% trans "Current classification: " %}
+		{% else %}
+			{% trans "Books classified for this week: " %}
+		{% endif %}
+	{% else %}
+		{% trans "Final results: " %}
+	{% endif %}
+</h2>
+
+<ul>
+	{% for book in books %}
+		<li>{{forloop.counter}}. {{book.title}}</li>
+	{% endfor %}
+</ul>
+
+
+<h2>
+	{% if object.active %}
+		{% if object.started %}
+			{% trans "Votations end in: " %}
+		{% else %}
+			{% trans "Votations start in: " %}
+		{% endif %}
+	{% endif %}
+</h2>
+
+
+
+{% with object.category.title as title %}
+
+	{% if object.active and not object.started %}
+
+		{% blocktrans with title=title %}
+			<p>Lat week's winner for {{title}} votations:</p>
+			<b>Winner with image and so cool</b>
+		{% endblocktrans %}
+		<p>Check <a href="{{object.get_previous_votations.get_absolute_url}}">last week's</a> results!</p>
+
+	{% elif not object.active and object.finished %}
+
+		{% blocktrans %}
+			<p>Go to <a href=".">current votations</a></p>
+		{% endblocktrans %}
+
+	{% endif %}
+
+	{% blocktrans with title=title %}
+		<p>Wanna check all <a href="{{url}}">{{title}} votations</a>?</p>
+	{% endblocktrans %}
+
+{% endwith %}
+
+
+
+
+
+
+
+{% endblock content %}

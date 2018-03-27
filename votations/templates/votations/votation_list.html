@@ -1,0 +1,18 @@
+{% extends "votations/base.html" %}
+{% load votation_tags %}
+{% load i18n %}
+
+{% block content %}
+
+
+<ul>
+	{% for vot in votations %}
+		{% blocktrans with position=vot.get_position_display month=vot.get_month_display url=vot.get_absolute_url %}
+			<li><a href="{{url}}">{{position}} votations for: {{month}}</a></li>
+			<p>Winner = no se sabe aun wei</p>
+		{% endblocktrans %}
+
+	{% endfor %}
+</ul>
+
+{% endblock content %}
